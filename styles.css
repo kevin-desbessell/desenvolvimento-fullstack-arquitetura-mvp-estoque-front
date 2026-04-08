@@ -1,0 +1,560 @@
+/* =========================================================
+   Variáveis globais de cor, sombra e borda
+   ========================================================= */
+:root {
+    --bg: #f5f2eb;
+    --surface: #ffffff;
+    --surface-2: #f8f8f8;
+    --primary: #2f5d50;
+    --primary-dark: #24473d;
+    --accent: #c58b3a;
+    --text: #1f1f1f;
+    --muted: #6b7280;
+    --border: #d8d8d8;
+    --danger: #b42318;
+    --danger-dark: #8f1c13;
+    --success-bg: #ecfdf3;
+    --success-text: #067647;
+    --error-bg: #fef3f2;
+    --error-text: #b42318;
+    --shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    --radius: 18px;
+}
+
+/* =========================================================
+   Reset básico e configurações globais
+   ========================================================= */
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    overflow-x: hidden;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+}
+
+button,
+input,
+textarea {
+    font: inherit;
+}
+
+/* =========================================================
+   Cabeçalho / Hero
+   ========================================================= */
+.hero {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    padding: 56px 20px 42px;
+}
+
+.hero-content {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.eyebrow {
+    margin: 0 0 10px;
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.85;
+}
+
+.hero h1 {
+    margin: 0;
+    font-size: 40px;
+}
+
+.hero-text {
+    margin-top: 12px;
+    max-width: 700px;
+    font-size: 17px;
+    line-height: 1.6;
+    opacity: 0.95;
+}
+
+/* =========================================================
+   Estrutura principal da página
+   ========================================================= */
+.container {
+    max-width: 1100px;
+    margin: -22px auto 40px;
+    padding: 0 20px;
+    display: grid;
+    gap: 24px;
+}
+
+.panel {
+    background: var(--surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 24px;
+}
+
+.section-header h2,
+.toolbar h2 {
+    margin: 0 0 6px;
+    font-size: 24px;
+}
+
+.section-subtitle {
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.5;
+}
+
+/* =========================================================
+   Formulário
+   ========================================================= */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: 22px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group-full {
+    grid-column: 1 / -1;
+}
+
+label {
+    font-weight: 700;
+    font-size: 14px;
+}
+
+input,
+textarea {
+    width: 100%;
+    padding: 13px 14px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface);
+    outline: none;
+    transition: 0.2s ease;
+}
+
+input:focus,
+textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(47, 93, 80, 0.12);
+}
+
+textarea {
+    resize: vertical;
+}
+
+.form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 22px;
+    flex-wrap: wrap;
+}
+
+/* =========================================================
+   Botões
+   ========================================================= */
+.btn {
+    border: none;
+    border-radius: 12px;
+    padding: 12px 18px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: 0.2s ease;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+}
+
+.btn-secondary {
+    background: #ececec;
+    color: var(--text);
+}
+
+.btn-secondary:hover {
+    background: #dcdcdc;
+}
+
+.btn-view {
+    background: #ececec;
+    color: var(--text);
+}
+
+.btn-view.active {
+    background: var(--accent);
+    color: white;
+}
+
+.btn-edit {
+    background: var(--accent);
+    color: white;
+}
+
+.btn-edit:hover {
+    filter: brightness(0.95);
+}
+
+.btn-delete {
+    background: var(--danger);
+    color: white;
+}
+
+.btn-delete:hover {
+    background: var(--danger-dark);
+}
+
+/* =========================================================
+   Barra superior da seção de produtos
+   ========================================================= */
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.view-toggle {
+    display: flex;
+    gap: 10px;
+}
+
+/* =========================================================
+   Mensagens de feedback
+   ========================================================= */
+.feedback {
+    margin-top: 18px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    font-weight: 700;
+}
+
+.feedback.success {
+    background: var(--success-bg);
+    color: var(--success-text);
+}
+
+.feedback.error {
+    background: var(--error-bg);
+    color: var(--error-text);
+}
+
+.hidden {
+    display: none;
+}
+
+/* =========================================================
+   Container dos produtos
+   ========================================================= */
+.products-container {
+    margin-top: 22px;
+}
+
+.empty-state {
+    padding: 26px;
+    border: 1px dashed var(--border);
+    border-radius: 16px;
+    color: var(--muted);
+    text-align: center;
+    background: var(--surface-2);
+}
+
+/* =========================================================
+   Modo cards
+   ========================================================= */
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+    gap: 18px;
+}
+
+.product-card {
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px;
+    background: var(--surface);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.product-card h3 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.product-meta {
+    display: grid;
+    gap: 8px;
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.product-description {
+    margin: 0;
+    line-height: 1.5;
+    color: #3a3a3a;
+}
+
+.card-actions,
+.table-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* =========================================================
+   Modo lista
+   ========================================================= */
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.products-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px;
+}
+
+.products-table th,
+.products-table td {
+    text-align: left;
+    padding: 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+}
+
+.products-table th {
+    background: #f6f6f6;
+    font-size: 14px;
+}
+
+.products-table tr:hover {
+    background: #fafafa;
+}
+
+/* =========================================================
+   Responsividade geral
+   ========================================================= */
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 30px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .container {
+        margin-top: -12px;
+    }
+}
+
+/* =========================================================
+   Tabela adaptada para telas menores
+   ========================================================= */
+@media (max-width: 900px) {
+
+    .products-table,
+    .products-table thead,
+    .products-table tbody,
+    .products-table tr,
+    .products-table th,
+    .products-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .products-table {
+        min-width: 0;
+        border: none;
+        background: transparent;
+    }
+
+    .products-table thead {
+        display: none;
+    }
+
+    .products-table tbody {
+        display: grid;
+        gap: 16px;
+    }
+
+    .products-table tr {
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        background: var(--surface);
+        padding: 14px;
+        box-shadow: var(--shadow);
+    }
+
+    .products-table td {
+        border: none;
+        padding: 8px 0;
+    }
+
+    .products-table td::before {
+        content: attr(data-label);
+        display: block;
+        margin-bottom: 4px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--muted);
+    }
+
+    .table-actions {
+        margin-top: 8px;
+    }
+}
+
+/* =========================================================
+   Ajustes para telas pequenas
+   ========================================================= */
+@media (max-width: 480px) {
+    .hero {
+        padding: 42px 16px 28px;
+    }
+
+    .hero h1 {
+        font-size: 28px;
+    }
+
+    .hero-text {
+        font-size: 15px;
+    }
+
+    .container {
+        padding: 0 12px;
+        gap: 16px;
+    }
+
+    .panel {
+        padding: 16px;
+        border-radius: 14px;
+    }
+
+    .toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .view-toggle {
+        width: 100%;
+    }
+
+    .view-toggle .btn {
+        flex: 1;
+    }
+
+    .form-actions,
+    .card-actions,
+    .table-actions {
+        flex-direction: column;
+    }
+
+    .form-actions .btn,
+    .card-actions .btn,
+    .table-actions .btn {
+        width: 100%;
+    }
+
+    .product-card {
+        padding: 16px;
+    }
+
+    .products-table tr {
+        padding: 12px;
+    }
+}
+
+/* =========================================================
+   Ajustes extras para telas muito pequenas
+   ========================================================= */
+@media (max-width: 350px) {
+    .hero {
+        padding: 36px 12px 24px;
+    }
+
+    .hero h1 {
+        font-size: 24px;
+        line-height: 1.2;
+    }
+
+    .eyebrow {
+        font-size: 12px;
+    }
+
+    .hero-text {
+        font-size: 14px;
+    }
+
+    .container {
+        padding: 0 8px;
+    }
+
+    .panel {
+        padding: 12px;
+        border-radius: 12px;
+    }
+
+    .section-header h2,
+    .toolbar h2 {
+        font-size: 20px;
+    }
+
+    input,
+    textarea {
+        padding: 11px 12px;
+        font-size: 14px;
+    }
+
+    .btn {
+        padding: 11px 14px;
+        font-size: 14px;
+    }
+
+    .cards-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .product-card {
+        padding: 14px;
+        border-radius: 14px;
+    }
+
+    .product-card h3 {
+        font-size: 18px;
+    }
+
+    .product-meta {
+        font-size: 13px;
+    }
+
+    .products-table tr {
+        padding: 10px;
+        border-radius: 12px;
+    }
+}
