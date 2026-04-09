@@ -125,6 +125,21 @@ Ou seja, basta:
 
 ---
 
+## Observação sobre comunicação com o backend
+
+Para garantir o funcionamento correto do frontend mesmo quando o arquivo `index.html` é aberto diretamente no navegador, o backend foi configurado com CORS para permitir a comunicação local com a API.
+
+Isso permite que o frontend funcione tanto:
+
+- abrindo o arquivo `index.html` diretamente no navegador
+- quanto por um servidor local, como o Live Server
+
+Desde que o backend esteja em execução em:
+
+`http://127.0.0.1:5000`
+
+---
+
 ## Integração com o backend
 
 O frontend consome a API através da constante definida no arquivo `script.js`:
