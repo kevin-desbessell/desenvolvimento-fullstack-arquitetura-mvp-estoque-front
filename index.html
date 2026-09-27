@@ -3,110 +3,220 @@
 
 <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Controle de Estoque</title>
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <!-- Chart.js: biblioteca de gráficos usada no dashboard -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 </head>
 
 <body>
     <div class="app">
-        <!-- Cabeçalho principal da aplicação -->
+        <!-- Cabeçalho principal -->
         <header class="hero">
             <div class="hero-content">
                 <p class="eyebrow">MVP • Controle de Estoque</p>
                 <h1>Loja de Materiais de Construção</h1>
                 <p class="hero-text">
-                    Sistema simples para cadastrar, listar, editar e remover produtos do estoque.
+                    Controle de produtos, movimentação de estoque, alertas de reposição
+                    e fornecedores cadastrados automaticamente pelo CNPJ.
                 </p>
+
+                <!-- Navegação entre as seções da SPA -->
+                <nav class="tabs" aria-label="Seções">
+                    <button class="tab active" type="button" data-tab="dashboard">Dashboard</button>
+                    <button class="tab" type="button" data-tab="produtos">Produtos</button>
+                    <button class="tab" type="button" data-tab="fornecedores">Fornecedores</button>
+                </nav>
             </div>
         </header>
 
         <main class="container">
-            <!-- Seção do formulário de cadastro e edição -->
-            <section class="panel">
-                <div class="section-header">
-                    <div>
+            <!-- =====================================================
+                 DASHBOARD
+                 ===================================================== -->
+            <section class="tab-panel" id="tab-dashboard">
+                <div class="stats-grid">
+                    <article class="stat-card">
+                        <span class="stat-label">Produtos cadastrados</span>
+                        <strong class="stat-value" id="stat-produtos">–</strong>
+                    </article>
+                    <article class="stat-card">
+                        <span class="stat-label">Itens em estoque</span>
+                        <strong class="stat-value" id="stat-itens">–</strong>
+                    </article>
+                    <article class="stat-card">
+                        <span class="stat-label">Valor total em estoque</span>
+                        <strong class="stat-value" id="stat-valor">–</strong>
+                    </article>
+                    <article class="stat-card stat-alert" id="stat-alerta-card">
+                        <span class="stat-label">Produtos com estoque baixo</span>
+                        <strong class="stat-value" id="stat-baixo">–</strong>
+                        <button class="link-btn" type="button" id="ver-estoque-baixo">Ver produtos →</button>
+                    </article>
+                </div>
+
+                <section class="panel">
+                    <div class="section-header">
+                        <h2>Valor em estoque por categoria</h2>
+                        <p class="section-subtitle">Soma de quantidade × preço de cada categoria.</p>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="grafico-categorias" aria-label="Gráfico de valor por categoria"></canvas>
+                        <div id="grafico-vazio" class="empty-state hidden">
+                            Cadastre produtos para ver o gráfico.
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <!-- =====================================================
+                 PRODUTOS
+                 ===================================================== -->
+            <section class="tab-panel hidden" id="tab-produtos">
+                <!-- Formulário de cadastro e edição -->
+                <section class="panel">
+                    <div class="section-header">
                         <h2 id="form-title">Cadastrar produto</h2>
                         <p class="section-subtitle">
                             Preencha os campos abaixo para adicionar um item ao estoque.
                         </p>
                     </div>
-                </div>
 
-                <!-- Formulário principal -->
-                <form id="product-form">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="nome">Nome</label>
-                            <input type="text" id="nome" placeholder="Ex.: Cimento CP II" required />
+                    <form id="product-form" novalidate>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="nome">Nome</label>
+                                <input type="text" id="nome" placeholder="Ex.: Cimento CP II" required />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="categoria">Categoria</label>
+                                <input type="text" id="categoria" list="categorias-sugeridas" placeholder="Ex.: Cimento" required />
+                                <datalist id="categorias-sugeridas"></datalist>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="quantidade">Quantidade</label>
+                                <input type="number" id="quantidade" min="0" step="1" placeholder="Ex.: 100" required />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="estoque-minimo">Estoque mínimo</label>
+                                <input type="number" id="estoque-minimo" min="0" step="1" placeholder="Ex.: 20" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="unidade">Unidade</label>
+                                <input type="text" id="unidade" placeholder="Ex.: saco" required />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="preco">Preço (R$)</label>
+                                <input type="number" id="preco" min="0" step="0.01" placeholder="Ex.: 42.90" required />
+                            </div>
+
+                            <div class="form-group form-group-full">
+                                <label for="fornecedor">Fornecedor</label>
+                                <select id="fornecedor">
+                                    <option value="">Sem fornecedor</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group form-group-full">
+                                <label for="descricao">Descrição</label>
+                                <textarea id="descricao" rows="3" placeholder="Ex.: Saco de 50kg"></textarea>
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="categoria">Categoria</label>
-                            <input type="text" id="categoria" placeholder="Ex.: Cimento" required />
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary" id="submit-btn">Cadastrar produto</button>
+                            <button type="button" class="btn btn-secondary hidden" id="cancel-edit-btn">Cancelar edição</button>
+                        </div>
+                    </form>
+                </section>
+
+                <!-- Listagem com filtros -->
+                <section class="panel">
+                    <div class="toolbar">
+                        <div>
+                            <h2>Produtos cadastrados</h2>
+                            <p class="section-subtitle" id="status-text">Carregando produtos...</p>
                         </div>
 
-                        <div class="form-group">
-                            <label for="quantidade">Quantidade</label>
-                            <input type="number" id="quantidade" min="0" step="1" placeholder="Ex.: 100" required />
-                        </div>
-
-                        <div class="form-group">
-                            <label for="unidade">Unidade</label>
-                            <input type="text" id="unidade" placeholder="Ex.: saco" required />
-                        </div>
-
-                        <div class="form-group">
-                            <label for="preco">Preço</label>
-                            <input type="number" id="preco" min="0" step="0.01" placeholder="Ex.: 42.90" required />
-                        </div>
-
-                        <div class="form-group form-group-full">
-                            <label for="descricao">Descrição</label>
-                            <textarea id="descricao" rows="3" placeholder="Ex.: Saco de 50kg"></textarea>
+                        <div class="view-toggle">
+                            <button class="btn btn-view active" id="cards-view-btn" type="button">Cards</button>
+                            <button class="btn btn-view" id="list-view-btn" type="button">Lista</button>
                         </div>
                     </div>
 
-                    <!-- Botões de ação do formulário -->
-                    <div class="form-actions">
-                        <button type="submit" class="btn btn-primary" id="submit-btn">
-                            Cadastrar produto
-                        </button>
-                        <button type="button" class="btn btn-secondary hidden" id="cancel-edit-btn">
-                            Cancelar edição
-                        </button>
+                    <form class="filters" id="filters-form">
+                        <input type="search" id="filtro-busca" placeholder="Buscar por nome ou descrição..." />
+                        <select id="filtro-categoria">
+                            <option value="">Todas as categorias</option>
+                        </select>
+                        <select id="filtro-ordenacao">
+                            <option value="nome:asc">Nome (A-Z)</option>
+                            <option value="nome:desc">Nome (Z-A)</option>
+                            <option value="preco:asc">Menor preço</option>
+                            <option value="preco:desc">Maior preço</option>
+                            <option value="quantidade:asc">Menor quantidade</option>
+                            <option value="data_insercao:desc">Mais recentes</option>
+                        </select>
+                        <label class="checkbox">
+                            <input type="checkbox" id="filtro-estoque-baixo" />
+                            Só estoque baixo
+                        </label>
+                    </form>
+
+                    <section id="products-container" class="products-container"></section>
+
+                    <div class="pagination" id="pagination">
+                        <button class="btn btn-secondary" type="button" id="prev-page">← Anterior</button>
+                        <span id="page-info">Página 1 de 1</span>
+                        <button class="btn btn-secondary" type="button" id="next-page">Próxima →</button>
                     </div>
-                </form>
+                </section>
             </section>
 
-            <!-- Seção de exibição dos produtos -->
-            <section class="panel">
-                <div class="toolbar">
-                    <div>
-                        <h2>Produtos cadastrados</h2>
-                        <p class="section-subtitle" id="status-text">
-                            Carregando produtos...
+            <!-- =====================================================
+                 FORNECEDORES
+                 ===================================================== -->
+            <section class="tab-panel hidden" id="tab-fornecedores">
+                <section class="panel">
+                    <div class="section-header">
+                        <h2>Cadastrar fornecedor pelo CNPJ</h2>
+                        <p class="section-subtitle">
+                            Digite apenas o CNPJ: razão social, situação cadastral e endereço são
+                            preenchidos automaticamente com dados da BrasilAPI (Receita Federal).
                         </p>
                     </div>
 
-                    <!-- Botões para alternar entre cards e lista -->
-                    <div class="view-toggle">
-                        <button class="btn btn-view active" id="cards-view-btn" type="button">Cards</button>
-                        <button class="btn btn-view" id="list-view-btn" type="button">Lista</button>
+                    <form id="cnpj-form" class="cnpj-form" novalidate>
+                        <input type="text" id="cnpj" inputmode="numeric" maxlength="18"
+                            placeholder="00.000.000/0000-00" aria-label="CNPJ" />
+                        <button type="submit" class="btn btn-primary" id="consultar-btn">Consultar CNPJ</button>
+                    </form>
+
+                    <!-- Pré-visualização do resultado da consulta -->
+                    <div id="cnpj-preview" class="cnpj-preview hidden"></div>
+                </section>
+
+                <section class="panel">
+                    <div class="section-header">
+                        <h2>Fornecedores cadastrados</h2>
+                        <p class="section-subtitle" id="fornecedores-status">Carregando...</p>
                     </div>
-                </div>
-
-                <!-- Área de feedback de sucesso ou erro -->
-                <div id="feedback" class="feedback hidden"></div>
-
-                <!-- Container dinâmico onde os produtos são renderizados -->
-                <section id="products-container" class="products-container"></section>
+                    <div id="fornecedores-container" class="products-container"></div>
+                </section>
             </section>
         </main>
     </div>
 
-    <script src="script.js"></script>
+    <!-- Feedback visual (toast) -->
+    <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+    <script type="module" src="js/main.js"></script>
 </body>
 
 </html>

@@ -1,0 +1,31 @@
+# Sobe os dois componentes desenvolvidos:
+#   - estoque-front (esta interface)          -> http://localhost:8080
+#   - estoque-api   (API de Estoque + Swagger) -> http://localhost:5000/openapi/swagger
+#
+# A API de Estoque é buscada na pasta vizinha "../estoque-api".
+# Clone os dois repositórios lado a lado (veja o README) ou defina
+# ESTOQUE_API_PATH apontando para outra pasta.
+
+services:
+  estoque-api:
+    build:
+      context: ${ESTOQUE_API_PATH:-../estoque-api}
+    container_name: estoque-api
+    ports:
+      - "5000:5000"
+    volumes:
+      - estoque-db:/app/database
+    restart: unless-stopped
+
+  estoque-front:
+    build:
+      context: .
+    container_name: estoque-front
+    ports:
+      - "8080:80"
+    depends_on:
+      - estoque-api
+    restart: unless-stopped
+
+volumes:
+  estoque-db:
